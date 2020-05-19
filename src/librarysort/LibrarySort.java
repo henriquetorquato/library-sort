@@ -1,6 +1,8 @@
 package librarysort;
 
 import java.util.Random;
+
+import librarysort.generators.AuthorGenerator;
 import librarysort.generators.BookGenerator;
 import librarysort.generators.CategoryGenerator;
 
@@ -10,14 +12,16 @@ public class LibrarySort {
 		try 
 		{
 			var random = new Random();
-			var bookGenerator = new BookGenerator(random);
 			var categoryGenerator = new CategoryGenerator(random);
+			var authorGenerator = new AuthorGenerator(random);
+			
+			var categories = categoryGenerator.GetNext(10);
+			var authors = authorGenerator.GetNext(10);
+			
+			var bookGenerator = new BookGenerator(random, authors, categories);
 			
 			var book = bookGenerator.GetNext();
-			var category = categoryGenerator.GetNext();
-			
-			System.out.println(book.GetAuthor());
-			System.out.println(category);
+			System.out.println(book.ToString());
 		}
 		catch (Exception ex) 
 		{

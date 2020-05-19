@@ -3,10 +3,32 @@ package librarysort.generators;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ResourceLoader {
 
+	private static Map<String, List<String>> resources = new HashMap<String, List<String>>();
+	
+	public static List<String> Get(String name) throws Exception {
+		try
+		{
+			var resource = resources.get(name);
+			
+			if (resource == null) {
+				resource = Load(name);
+				resources.put(name, resource);
+			}
+			
+			return resource;
+		}
+		catch (Exception ex)
+		{
+			throw ex;
+		}
+	}
+	
 	public static List<String> Load(String name) throws Exception {
 		try
 		{		

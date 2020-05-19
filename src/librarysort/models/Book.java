@@ -6,12 +6,15 @@ public class Book {
 	
 	private String name;
 	
-	private String author;
+	private Author author;
 	
-	public Book(String id, String name, String author) { 
+	private String category;
+	
+	public Book(String id, String name, Author author, String category) { 
 		this.id = id; 
 		this.name = name;
 		this.author = author;
+		this.category = category;
 	}
 
 	public String GetId() {
@@ -22,8 +25,16 @@ public class Book {
 		return name;
 	}
 	
-	public String GetAuthor() {
+	public Author GetAuthor() {
 		return author;
+	}
+	
+	public String GetCategory() {
+		return category;
+	}
+	
+	public String ToString() {
+		return String.format("%s. %s (%s)", author.ToString(), name, category);
 	}
 	
 }

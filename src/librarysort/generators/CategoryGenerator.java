@@ -11,16 +11,12 @@ public class CategoryGenerator extends GeneratorBase<String> implements IGenerat
 	
 	public CategoryGenerator(Random random) throws Exception {
 		super(random);
-		this.categories = ResourceLoader.Load("categories.txt");
+		this.categories = ResourceLoader.Get("words.txt");
 	}
 	
 	@Override
 	public String GetNext() {
-		String[] components = new String[ComposeSize];
-		for(int i = 0; i < ComposeSize; i++) {
-			components[i] = GetRandom(this.categories);
-		}
-		
+		var components = GetRandom(this.categories, ComposeSize);		
 		return String.join(" ", components);
 	}
 
