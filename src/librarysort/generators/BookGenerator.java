@@ -5,28 +5,20 @@ import java.util.Random;
 
 import librarysort.models.Book;
 
-public class BookGenerator implements IGenerator<Book> {
+public class BookGenerator extends GeneratorBase<Book> implements IGenerator<Book> {
 
-	private List<String> authors;	
-	private ListSelector<String> listSelector;
+	private List<String> authors;
 	
 	public BookGenerator(Random random) throws Exception {
-		LoadResources();
-		this.listSelector = new ListSelector<String>(random);
+		super(random);
+		this.authors = ResourceLoader.Load("authors.txt");
 	}
 	
 	@Override
-	public Book GetNext(String id) {
-		var author = this.listSelector.GetRandom(authors);
-		var book = new Book("teste1", author);
+	public Book GetNext() {
+		var author = GetRandom(authors);
+		var book = new Book("a", "teste1", author);
 		return book;
-	}
-	
-	private void LoadResources() throws Exception {
-		var currentPath = System.getProperty("user.dir");
-		var authorsPath = String.format("%s\\%s", currentPath, "bin/authors.txt");
-		
-		this.authors = ResourceLoader.Load(authorsPath);
 	}
 
 }

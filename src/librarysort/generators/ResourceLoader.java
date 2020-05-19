@@ -7,9 +7,10 @@ import java.util.List;
 
 public final class ResourceLoader {
 
-	public static List<String> Load(String path) throws Exception {
+	public static List<String> Load(String name) throws Exception {
 		try
-		{			
+		{		
+			var path = GetPath(name);
 			var file = new File(path);
 			var stream = new FileInputStream(file);
 			
@@ -30,7 +31,7 @@ public final class ResourceLoader {
 			stream.close();
 			
 			if (resource.size() == 0) {
-				throw new Exception(String.format("The resource '%s' is empty", path));
+				throw new Exception(String.format("The resource '%s' is empty", name));
 			}
 			
 			return resource;
@@ -39,6 +40,11 @@ public final class ResourceLoader {
 		{
 			throw ex;
 		}
+	}
+	
+	private static String GetPath(String name) {
+		var currentPath = System.getProperty("user.dir");
+		return String.format("%s\\bin\\%s", currentPath, name);
 	}
 	
 }
