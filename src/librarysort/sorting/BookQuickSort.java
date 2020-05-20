@@ -4,6 +4,11 @@ import librarysort.models.Book;
 
 public class BookQuickSort implements ISort<Book> {
 	
+	/*
+	 * Implementation reference:
+	 * https://www.geeksforgeeks.org/java-program-for-quicksort/
+	 */
+	
 	@Override
 	public String GetMethod() {
 		return "QuickSort";
