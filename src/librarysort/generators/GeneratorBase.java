@@ -25,7 +25,8 @@ public abstract class GeneratorBase<T> implements IGenerator<T> {
 	}
 	
 	public <TList> TList GetRandom(List<TList> list) {
-		return list.get(this.random.nextInt(list.size()));
+		var arr = list.toArray();
+		return list.get(this.random.nextInt(arr.length));
 	}
 	
 	// Suppression added because the array being cast will always be type safe

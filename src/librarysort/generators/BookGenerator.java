@@ -37,8 +37,8 @@ public class BookGenerator extends GeneratorBase<Book> implements IGenerator<Boo
 		return new Book(
 			UUID.randomUUID().toString(),
 			String.format(template, names.get(0), names.get(1)),
-			GetRandom(authors),
-			GetRandom(categories));
+			GetRandom(this.authors),
+			GetRandom(this.categories));
 	}
 
 }

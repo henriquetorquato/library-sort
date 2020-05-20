@@ -33,8 +33,8 @@ public class Book {
 		return category;
 	}
 	
-	public String ToString() {
-		return String.format("%s. %s (%s)", author.ToString(), name, category);
+	public String toString() {
+		return String.format("%s. %s (%s)", author.toString(), name, category);
 	}
 	
 }

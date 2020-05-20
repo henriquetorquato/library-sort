@@ -19,7 +19,7 @@ public class Author {
 		return lastName;
 	}
 	
-	public String ToString() {
+	public String toString() {
 		return String.format("%s, %s", lastName.toUpperCase(), firstName);
 	}
 	
