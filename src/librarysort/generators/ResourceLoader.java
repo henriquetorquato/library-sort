@@ -32,7 +32,7 @@ public final class ResourceLoader {
 	public static List<String> Load(String name) throws Exception {
 		try
 		{		
-			var path = GetPath(name);
+			var path = getPath(name);
 			var file = new File(path);
 			var stream = new FileInputStream(file);
 			
@@ -64,7 +64,7 @@ public final class ResourceLoader {
 		}
 	}
 	
-	private static String GetPath(String name) {
+	private static String getPath(String name) {
 		var currentPath = System.getProperty("user.dir");
 		return String.format("%s\\bin\\%s", currentPath, name);
 	}
