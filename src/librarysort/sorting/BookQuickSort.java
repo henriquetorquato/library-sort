@@ -1,6 +1,7 @@
 package librarysort.sorting;
 
 import librarysort.models.Book;
+import librarysort.models.ISink;
 
 public class BookQuickSort implements ISort<Book> {
 	
@@ -9,6 +10,12 @@ public class BookQuickSort implements ISort<Book> {
 	 * https://www.geeksforgeeks.org/java-program-for-quicksort/
 	 */
 	
+	private final ISink sink;
+	
+	public BookQuickSort(ISink sink) {
+		this.sink = sink;
+	}
+	
 	@Override
 	public String GetMethod() {
 		return "QuickSort";
@@ -16,6 +23,7 @@ public class BookQuickSort implements ISort<Book> {
 	
 	@Override
 	public Book[] Sort(Book[] items) {
+		this.sink.PrintLine();
 		sort(items, 0, items.length - 1);
 		return items;
 	}
@@ -43,6 +51,8 @@ public class BookQuickSort implements ISort<Book> {
 		// Stating from low, up to high
 		for (int y = low; y < high; y++) {
 			var current = books[y];
+			
+			this.sink.ReplaceLine(String.format("Comparing %s", current.toString()));
 			
 			// Checks if current comes before pivot in alphabetical order, or if both are equal
 			// current <= pivot
