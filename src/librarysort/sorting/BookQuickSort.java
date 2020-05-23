@@ -56,7 +56,7 @@ public class BookQuickSort implements ISort<Book> {
 			
 			// Checks if current comes before pivot in alphabetical order, or if both are equal
 			// current <= pivot
-			if (lessThanOrEqual(current.GetCategory(), pivot.GetCategory())) {
+			if (lessThanOrEqual(current.getCategory(), pivot.getCategory())) {
 				// Move to next book
 				x++;
 				

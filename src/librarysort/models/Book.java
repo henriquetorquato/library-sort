@@ -17,19 +17,19 @@ public class Book {
 		this.category = category;
 	}
 
-	public String GetId() {
+	public String getId() {
 		return id;
 	}
 	
-	public String GetName() {
+	public String getName() {
 		return name;
 	}
 	
-	public Author GetAuthor() {
+	public Author getAuthor() {
 		return author;
 	}
 	
-	public String GetCategory() {
+	public String getCategory() {
 		return category;
 	}
 	

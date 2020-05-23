@@ -11,8 +11,12 @@ import librarysort.generators.IGenerator;
 import librarysort.models.Author;
 import librarysort.models.Book;
 import librarysort.models.ISink;
+import librarysort.models.Shelf;
+import librarysort.models.ShelfBuilder;
+import librarysort.sorting.BookMergeSort;
 import librarysort.sorting.BookQuickSort;
 import librarysort.sorting.ISort;
+import librarysort.sorting.ShelfSortingRunnable;
 
 public class LibrarySort {
 
@@ -22,16 +26,32 @@ public class LibrarySort {
 	public static void main(String[] args) throws Exception {
 		try 
 		{
-			var random = new Random();
-			sink = new ConsoleSink(false);
+			// Creates the sink instance
+			sink = new ConsoleSink(true);
 			
+			// Create the random object for the generators
+			var random = new Random();
+			
+			// Creates a instance for the ShelfBuilder with the book limit
+			// Book limit of 50
+			var shelfBuilder = new ShelfBuilder(50);
+			
+			// Generate the used categories
 			var categories = GenerateResources("Categories", new CategoryGenerator(random), 10, String.class);
+			
+			// Generate the used authors
 			var authors = GenerateResources("Authors", new AuthorGenerator(random), 10, Author.class);
 			
-			var bookGenerator = new BookGenerator(random, authors, categories);
-			var books = GenerateResources("Books", bookGenerator, 1000, Book.class);
+			// Generate the books using the defined categories and authors
+			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 1000, Book.class);
 			
-			SortResources("Books", new BookQuickSort(sink), books, Book.class);
+			// Sort the books by category
+			var sortedBooks = SortResources("Books", new BookQuickSort(sink), books, Book.class);
+			
+			// Distributes the sorted books to the shelfs, using the book per shelf limit
+			var shelfs = shelfBuilder.buildShelfs(sortedBooks);
+			
+			RunShelfSortingThreads(shelfs, new BookMergeSort());
 		}
 		catch (Exception ex) 
 		{
@@ -64,6 +84,41 @@ public class LibrarySort {
 		
 		// Sort array
 		return sorting.Sort(arr);
+	}
+	
+	public static void RunShelfSortingThreads(Shelf[] shelfs, ISort<Book> sorting) {
+		sink.PrintLine("> Building sorting runnables...");
+		
+		var runnables = new ShelfSortingRunnable[shelfs.length];
+		for (int i = 0; i < shelfs.length; i++) {
+			sink.PrintLine(
+					String.format(">> Building sorting runnable %d", i));
+			
+			runnables[i] = new ShelfSortingRunnable(
+				Integer.toString(i),
+				shelfs[i],
+				sorting,
+				sink);
+		}
+		
+		sink.PrintLine("> Starting threads...");
+		
+		for (var runnable : runnables) {
+			var thread = new Thread(runnable);
+			thread.start();
+		}
+		
+		sink.PrintLine("> Threads started, awaiting completion");
+		
+		var finishedThreadCount = 0;
+		while (finishedThreadCount < runnables.length) {
+			for (int i = 0; i < runnables.length; i++) {
+				if (runnables[i].isCompleted()) {
+					shelfs[i] = runnables[i].getResult();
+					finishedThreadCount++;
+				}
+			}
+		}
 	}
 
 }
