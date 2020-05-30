@@ -20,7 +20,7 @@ import librarysort.sorting.ShelfSortingRunnable;
 
 public class LibrarySort {
 
-	private static final String ProgressTemplate = "[%d/%d] %s";
+	private static final String ProgressTemplate = "> [%d/%d] %s";
 	private static ISink sink;
 	
 	public static void main(String[] args) throws Exception {
@@ -43,7 +43,7 @@ public class LibrarySort {
 			var authors = GenerateResources("Authors", new AuthorGenerator(random), 10, Author.class);
 			
 			// Generate the books using the defined categories and authors
-			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 1000, Book.class);
+			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 10000, Book.class);
 			
 			// Sort the books by category
 			var sortedBooks = SortResources("Books", new BookQuickSort(sink), books, Book.class);
@@ -108,8 +108,6 @@ public class LibrarySort {
 			thread.start();
 		}
 		
-		sink.PrintLine("> Threads started, awaiting completion");
-		
 		var finishedThreadCount = 0;
 		while (finishedThreadCount < runnables.length) {
 			for (int i = 0; i < runnables.length; i++) {
@@ -119,6 +117,8 @@ public class LibrarySort {
 				}
 			}
 		}
+		
+		sink.PrintLine("> Finished getting result for all shelfs");
 	}
 
 }

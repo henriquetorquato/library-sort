@@ -10,14 +10,12 @@ public class Shelf {
 	
 	private int length;
 	
-	private int index;
-	
 	private Book[] books;
 	
 	private ArrayList<String> categories;
 	
 	public Shelf(int limit) {
-		this.index = 0;
+		this.length = 0;
 		this.books = new Book[limit];
 		this.categories = new ArrayList<String>();
 		this.limit = limit;
@@ -29,7 +27,7 @@ public class Shelf {
 	
 	public void addBook(Book book) {
 		this.addCategory(book.getCategory());
-		this.books[this.index] = book;
+		this.books[this.length++] = book;
 	}
 	
 	public Book[] getBooks() {

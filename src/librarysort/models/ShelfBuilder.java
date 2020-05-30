@@ -25,10 +25,9 @@ public class ShelfBuilder {
 			var shelf = new Shelf(shelfLimit);
 			
 			// Add books to the shelf up to the limit
-			for (int b = curentBook; b < shelfLimit; b++) {
-				if (b < books.length) {
-					shelf.addBook(books[b]);
-					curentBook++;
+			while (shelf.haveSpace()) {
+				if (curentBook < books.length) {
+					shelf.addBook(books[curentBook++]);
 				}
 			}
 		

@@ -3,7 +3,7 @@ package librarysort.sorting;
 import librarysort.models.Book;
 import librarysort.models.ISink;
 
-public class BookQuickSort implements ISort<Book> {
+public class BookQuickSort extends Sort implements ISort<Book> {
 	
 	/*
 	 * Implementation reference:
@@ -52,7 +52,7 @@ public class BookQuickSort implements ISort<Book> {
 		for (int y = low; y < high; y++) {
 			var current = books[y];
 			
-			this.sink.ReplaceLine(String.format("Comparing %s", current.toString()));
+			this.sink.ReplaceLine(String.format("> Comparing %s", current.toString()));
 			
 			// Checks if current comes before pivot in alphabetical order, or if both are equal
 			// current <= pivot
@@ -74,12 +74,6 @@ public class BookQuickSort implements ISort<Book> {
 		
 		// Return the next partition position
 		return x + 1;
-	}
-	
-	// Used to compare if a comes before b in alphabetical order, or if both strings are equal
-	private Boolean lessThanOrEqual(String a, String b) {
-		var result = a.compareTo(b);
-		return result <= 0;
 	}
 
 }

@@ -25,14 +25,14 @@ public class ShelfSortingRunnable implements Runnable {
 	@Override
 	public void run() {
 		sink.PrintLine(
-				String.format("[%s] Starting sorting shelf %s using %s", this.id, this.result.getId(), sorting.GetMethod()));
+				String.format(">> Starting sorting shelf %s using %s", this.id, this.result.getId(), sorting.GetMethod()));
 		
 		var books = this.sorting.Sort(this.result.getBooks());
 		this.result.setBooks(books);
 		this.completed = true;
 		
 		sink.PrintLine(
-				String.format("[%s] Finished sorting shelf %s", this.id, this.result.getId()));
+				String.format(">> Finished sorting shelf %s", this.id, this.result.getId()));
 	}
 	
 	public Shelf getResult() {
