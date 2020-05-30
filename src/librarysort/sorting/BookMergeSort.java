@@ -1,9 +1,13 @@
 package librarysort.sorting;
 
 import librarysort.models.Book;
-import librarysort.models.ISink;
 
 public class BookMergeSort extends Sort implements ISort<Book> {
+		
+	/*
+	 * Implementation reference:
+	 * https://www.baeldung.com/java-merge-sort
+	 */
 	
 	@Override
 	public String GetMethod() {
