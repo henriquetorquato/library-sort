@@ -30,21 +30,19 @@ public class LibrarySort {
 			
 			// Creates a instance for the ShelfBuilder with the book limit
 			// Book limit of 50
-			var shelfBuilder = new ShelfBuilder(100);
+			var shelfBuilder = new ShelfBuilder(500);
 			
 			// Generate the used categories
-			var categories = GenerateResources("Categories", new CategoryGenerator(random), 10, String.class);
+			var categories = GenerateResources("Categories", new CategoryGenerator(random), 1000, String.class);
 			
 			// Generate the used authors
-			var authors = GenerateResources("Authors", new AuthorGenerator(random), 10, Author.class);
+			var authors = GenerateResources("Authors", new AuthorGenerator(random), 1000, Author.class);
 			
 			// Generate the books using the defined categories and authors
-			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 10, Book.class);
-			PrintBooks(books.toArray(new Book[books.size()]));
+			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 100000, Book.class);
 			
 			// Sort the books by category
 			var sortedBooks = RunBookSortingThreads(books, new BookMultithreadedQuickSort());
-			PrintBooks(sortedBooks);
 			
 			// Distributes the sorted books to the shelfs, using the book per shelf limit
 			var shelfs = shelfBuilder.buildShelfs(sortedBooks);
@@ -96,10 +94,7 @@ public class LibrarySort {
 		
 		var runnables = new ShelfSortingRunnable[shelfs.length];
 		for (int i = 0; i < shelfs.length; i++) {			
-			runnables[i] = new ShelfSortingRunnable(
-				Integer.toString(i),
-				shelfs[i],
-				sorting);
+			runnables[i] = new ShelfSortingRunnable(shelfs[i], sorting);
 		}
 		
 		System.out.println("> Starting threads...");

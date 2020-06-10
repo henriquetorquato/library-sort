@@ -20,12 +20,8 @@ public class BookMultithreadedQuickSort extends BookQuickSort implements ISort<B
 
 	@Override
 	public Book[] sort(Book[] items) {
-		// Get the initial partition index
-		int initialIndex = partition(items, 0, items.length - 1);
-		
-		// Start threads for the next partitions
-		startThread(items, 0, initialIndex - 1);
-		startThread(items, initialIndex + 1, items.length - 1);
+		// Create the initial thread
+		createThread(items, 0, items.length - 1);
 		
 		// While there is a thread alive
 		while (this.runnables.size() > 0) {
@@ -45,8 +41,8 @@ public class BookMultithreadedQuickSort extends BookQuickSort implements ISort<B
 				// If thread resulted in another partition
 				if (low < high) {					
 					// Start next partition threads
-					startThread(items, low, index - 1);
-					startThread(items, index + 1, high);
+					createThread(items, low, index - 1);
+					createThread(items, index + 1, high);
 				}
 				
 				runnables.remove(i);
@@ -56,7 +52,7 @@ public class BookMultithreadedQuickSort extends BookQuickSort implements ISort<B
 		return items;
 	}
 	
-	private void startThread(Book[] books, int low, int high) {
+	private void createThread(Book[] books, int low, int high) {
 		var section = Arrays.copyOfRange(books, low, high + 1);
 		var runnable = new BookSortingRunnable(section, low, high);
 		var thread = new Thread(runnable);
