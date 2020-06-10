@@ -33,16 +33,18 @@ public class LibrarySort {
 			var shelfBuilder = new ShelfBuilder(100);
 			
 			// Generate the used categories
-			var categories = GenerateResources("Categories", new CategoryGenerator(random), 1000, String.class);
+			var categories = GenerateResources("Categories", new CategoryGenerator(random), 10, String.class);
 			
 			// Generate the used authors
-			var authors = GenerateResources("Authors", new AuthorGenerator(random), 1000, Author.class);
+			var authors = GenerateResources("Authors", new AuthorGenerator(random), 10, Author.class);
 			
 			// Generate the books using the defined categories and authors
-			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 50000, Book.class);
+			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 10, Book.class);
+			PrintBooks(books.toArray(new Book[books.size()]));
 			
 			// Sort the books by category
 			var sortedBooks = RunBookSortingThreads(books, new BookMultithreadedQuickSort());
+			PrintBooks(sortedBooks);
 			
 			// Distributes the sorted books to the shelfs, using the book per shelf limit
 			var shelfs = shelfBuilder.buildShelfs(sortedBooks);
@@ -123,5 +125,12 @@ public class LibrarySort {
 		System.out.printf("> Finished getting result for all shelfs - Took %dms\n", Duration.between(start, end).toMillis());
 	}
 
+	public static void PrintBooks(Book[] books) {
+		for (int i = 0; i < books.length; i++) {
+			System.out.println(books[i].getCategory());
+		}
+		System.out.println();
+	}
+	
 }
  

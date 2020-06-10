@@ -28,12 +28,12 @@ public class BookSortingRunnable extends BookQuickSort implements Runnable {
 	@Override
 	public void run()
 	{	
-		if (this.low < this.high) {
-			this.index = partition(this.books, this.low, this.high);
-			this.completed = true;
+		if (low < high) {
+			index = partition(books, 0, books.length - 1);
+			index += low;
 		}
 				
-		this.completed = true;
+		completed = true;
 	}
 	
 	public Boolean isCompleted() {

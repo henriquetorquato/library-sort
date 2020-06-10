@@ -1,17 +1,16 @@
 package librarysort.sorting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
 import librarysort.models.Book;
-import librarysort.models.ISink;
 
 public class BookMultithreadedQuickSort extends BookQuickSort implements ISort<Book> {
 
-	private final List<BookSortingRunnable> threads;
+	private final List<BookSortingRunnable> runnables;
 	
 	public BookMultithreadedQuickSort() {
-		this.threads = new ArrayList<BookSortingRunnable>();
+		this.runnables = new ArrayList<BookSortingRunnable>();
 	}
 	
 	@Override
@@ -25,32 +24,32 @@ public class BookMultithreadedQuickSort extends BookQuickSort implements ISort<B
 		int initialIndex = partition(items, 0, items.length - 1);
 		
 		// Start threads for the next partitions
-		startThread(items.clone(), 0, initialIndex - 1);
-		startThread(items.clone(), initialIndex + 1, items.length - 1);
+		startThread(items, 0, initialIndex - 1);
+		startThread(items, initialIndex + 1, items.length - 1);
 		
 		// While there is a thread alive
-		while (this.threads.size() > 0) {
-			for (int i = 0; i < this.threads.size(); i++) {
-				var thread = this.threads.get(i);
+		while (this.runnables.size() > 0) {
+			for (int i = 0; i < this.runnables.size(); i++) {
+				var runnable = this.runnables.get(i);
 				
-				if (!thread.isCompleted()) {
+				if (!runnable.isCompleted()) {
 					continue;
 				}
 				
-				var low = thread.getLow();
-				var high = thread.getHigh();
+				var low = runnable.getLow();
+				var high = runnable.getHigh();
 				
-				setValues(items, thread.getResult(), low, high);
-				var index = thread.getIndex();
+				setValues(items, runnable.getResult(), low, high);
+				var index = runnable.getIndex();
 				
 				// If thread resulted in another partition
 				if (low < high) {					
 					// Start next partition threads
-					startThread(items.clone(), low, index - 1);
-					startThread(items.clone(), index + 1, high);
+					startThread(items, low, index - 1);
+					startThread(items, index + 1, high);
 				}
 				
-				threads.remove(i);
+				runnables.remove(i);
 			}
 		}
 		
@@ -58,14 +57,18 @@ public class BookMultithreadedQuickSort extends BookQuickSort implements ISort<B
 	}
 	
 	private void startThread(Book[] books, int low, int high) {
-		var thread = new BookSortingRunnable(books, low, high);
-		thread.run();
-		threads.add(thread);
+		var section = Arrays.copyOfRange(books, low, high + 1);
+		var runnable = new BookSortingRunnable(section, low, high);
+		var thread = new Thread(runnable);
+		
+		thread.start();
+		runnables.add(runnable);
 	}
 	
 	private void setValues(Book[] target, Book[] source, int start, int end) {
+		var sourceIndex = 0;
 		for (int i = start; i <= end; i++) {
-			target[i] = source[i];
+			target[i] = source[sourceIndex++];
 		}
 	}
 }
