@@ -3,9 +3,9 @@ package librarysort.sorting;
 public interface ISort<T> {
 	
 	// Get the name of the sorting method
-	public String GetMethod();
+	public String getMethod();
 	
 	// Sort items
-	public T[] Sort(T[] items);
+	public T[] sort(T[] items);
 	
 }

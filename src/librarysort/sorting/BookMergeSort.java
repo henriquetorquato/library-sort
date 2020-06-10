@@ -10,17 +10,13 @@ public class BookMergeSort extends Sort implements ISort<Book> {
 	 */
 	
 	@Override
-	public String GetMethod() {
+	public String getMethod() {
 		return "MergeSort";
-	}
-
-	@Override
-	public Book[] Sort(Book[] items) {
-		return sort(items);
 	}
 	
 	// Sort the book array
-	private Book[] sort(Book[] books) {
+	@Override
+	public Book[] sort(Book[] books) {
 		// Array size limit check
 		// If there only two items to compare, then is the minimum size
 		if (books.length < 2) {

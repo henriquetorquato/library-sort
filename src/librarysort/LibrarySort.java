@@ -1,6 +1,8 @@
 package librarysort;
 
 import java.lang.reflect.Array;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Random;
 
@@ -10,43 +12,37 @@ import librarysort.generators.CategoryGenerator;
 import librarysort.generators.IGenerator;
 import librarysort.models.Author;
 import librarysort.models.Book;
-import librarysort.models.ISink;
 import librarysort.models.Shelf;
 import librarysort.models.ShelfBuilder;
 import librarysort.sorting.BookMergeSort;
+import librarysort.sorting.BookMultithreadedQuickSort;
 import librarysort.sorting.BookQuickSort;
 import librarysort.sorting.ISort;
 import librarysort.sorting.ShelfSortingRunnable;
 
 public class LibrarySort {
-
-	private static final String ProgressTemplate = "> [%d/%d] %s";
-	private static ISink sink;
 	
 	public static void main(String[] args) throws Exception {
 		try 
-		{
-			// Creates the sink instance
-			sink = new ConsoleSink(true);
-			
+		{		
 			// Create the random object for the generators
 			var random = new Random();
 			
 			// Creates a instance for the ShelfBuilder with the book limit
 			// Book limit of 50
-			var shelfBuilder = new ShelfBuilder(50);
+			var shelfBuilder = new ShelfBuilder(100);
 			
 			// Generate the used categories
-			var categories = GenerateResources("Categories", new CategoryGenerator(random), 10, String.class);
+			var categories = GenerateResources("Categories", new CategoryGenerator(random), 1000, String.class);
 			
 			// Generate the used authors
-			var authors = GenerateResources("Authors", new AuthorGenerator(random), 10, Author.class);
+			var authors = GenerateResources("Authors", new AuthorGenerator(random), 1000, Author.class);
 			
 			// Generate the books using the defined categories and authors
-			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 10000, Book.class);
+			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 50000, Book.class);
 			
 			// Sort the books by category
-			var sortedBooks = SortResources("Books", new BookQuickSort(sink), books, Book.class);
+			var sortedBooks = RunBookSortingThreads(books, new BookMultithreadedQuickSort());
 			
 			// Distributes the sorted books to the shelfs, using the book per shelf limit
 			var shelfs = shelfBuilder.buildShelfs(sortedBooks);
@@ -59,49 +55,54 @@ public class LibrarySort {
 		}
 	}
 	
-	public static <TResource> List<TResource> GenerateResources(String name, IGenerator<TResource> generator, int amount, Class<TResource> type) {
-		sink.PrintLine(String.format("> Generating %d %s", amount, name));
+	public static <TResource> List<TResource> GenerateResources(String name, IGenerator<TResource> generator, int amount, Class<TResource> type) {	
+		System.out.printf("> Generating %d %s", amount, name);
 		
 		var resources = (TResource[]) Array.newInstance(type, amount);
+		var start = Instant.now();
+		
 		for (int i = 0; i < amount; i++) {
 			var resource = generator.GetNext();
 			resources[i] = resource;
-			
-			sink.ReplaceLine(String.format(ProgressTemplate, i + 1, amount, resource.toString()));
 		}
+		
+		var end = Instant.now();
+		System.out.printf(" - Took %dms", Duration.between(start, end).toMillis());
+		System.out.println();
 		
 		return List.of(resources);
 	}
 	
-	public static <TResource> TResource[] SortResources(String name, ISort<TResource> sorting, List<TResource> resources, Class<TResource> type) {
-		sink.PrintLine(String.format("> Sorting %s using %s", name, sorting.GetMethod()));
+	public static Book[] RunBookSortingThreads(List<Book> books, ISort<Book> sorting) {	
+		System.out.printf("> Sorting Books using %s", sorting.getMethod());
 		
-		// Create a new instance of array
-		var arr = (TResource[]) Array.newInstance(type, resources.size());
+		var bookArray = new Book[books.size()];
+		bookArray = books.toArray(bookArray);
 		
-		// Copy list to array
-		resources.toArray(arr);
+		var start = Instant.now();
+		var sorted = sorting.sort(bookArray);
+		var end = Instant.now();
 		
-		// Sort array
-		return sorting.Sort(arr);
+		System.out.printf(" - Took %dms", Duration.between(start, end).toMillis());
+		System.out.println();
+		
+		return sorted;
 	}
 	
 	public static void RunShelfSortingThreads(Shelf[] shelfs, ISort<Book> sorting) {
-		sink.PrintLine("> Building sorting runnables...");
+		System.out.println("> Building sorting runnables...");
 		
 		var runnables = new ShelfSortingRunnable[shelfs.length];
-		for (int i = 0; i < shelfs.length; i++) {
-			sink.PrintLine(
-					String.format(">> Building sorting runnable %d", i));
-			
+		for (int i = 0; i < shelfs.length; i++) {			
 			runnables[i] = new ShelfSortingRunnable(
 				Integer.toString(i),
 				shelfs[i],
-				sorting,
-				sink);
+				sorting);
 		}
 		
-		sink.PrintLine("> Starting threads...");
+		System.out.println("> Starting threads...");
+		
+		var start = Instant.now();
 		
 		for (var runnable : runnables) {
 			var thread = new Thread(runnable);
@@ -118,7 +119,8 @@ public class LibrarySort {
 			}
 		}
 		
-		sink.PrintLine("> Finished getting result for all shelfs");
+		var end = Instant.now();
+		System.out.printf("> Finished getting result for all shelfs - Took %dms\n", Duration.between(start, end).toMillis());
 	}
 
 }
