@@ -1,8 +1,6 @@
 package librarysort;
 
 import java.lang.reflect.Array;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
@@ -51,32 +49,34 @@ public class Main {
 	public static <TResource> TResource[] GenerateResources(String name, IGenerator<TResource> generator, int amount, Class<TResource> type) {	
 		System.out.printf("> Generating %d %s", amount, name);
 		
-		var resources = (TResource[]) Array.newInstance(type, amount);
-		var start = Instant.now();
+		var result = TimedResult.measure(new Callable<TResource[]>() {
+			public TResource[] call() {
+				var resources = (TResource[]) Array.newInstance(type, amount);
+				
+				for (int i = 0; i < amount; i++) {
+					var resource = generator.getNext();
+					resources[i] = resource;
+				}
+				
+				return resources;
+			}
+		});
 		
-		for (int i = 0; i < amount; i++) {
-			var resource = generator.getNext();
-			resources[i] = resource;
-		}
-		
-		var end = Instant.now();
-		System.out.printf(" - Took %dms", Duration.between(start, end).toMillis());
-		System.out.println();
-		
-		return resources;
+		System.out.printf(" - Took %dms\n", result.getTime());
+		return result.getResource();
 	}
 	
 	public static <TResource> TResource[] RunSortingThreads(String name, TResource[] resource, ISort<TResource> sorting) {
 		System.out.printf("> Sorting %s using %s", name, sorting.getMethod());
 		
-		var start = Instant.now();
-		var sorted = sorting.sort(resource);
-		var end = Instant.now();
+		var result = TimedResult.measure(new Callable<TResource[]>() {
+			public TResource[] call() {
+				return sorting.sort(resource);
+			}
+		});
 		
-		System.out.printf(" - Took %dms", Duration.between(start, end).toMillis());
-		System.out.println();
-		
-		return sorted;
+		System.out.printf(" - Took %dms\n", result.getTime());
+		return result.getResource();
 	}
 	
 	public static void PrintBooks(Book[] books) {
@@ -85,5 +85,6 @@ public class Main {
 		}
 		System.out.println();
 	}
+
 }
  
