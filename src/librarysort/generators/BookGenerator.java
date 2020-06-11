@@ -1,6 +1,5 @@
 package librarysort.generators;
 
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import librarysort.models.Author;
@@ -8,20 +7,22 @@ import librarysort.models.Book;
 
 public class BookGenerator extends GeneratorBase<Book> implements IGenerator<Book> {
 	
-	private List<Author> authors;
-	private List<String> categories;
-	private List<String> names;
+	private final int ComposeSize = 2;
 	
-	private List<String> templates = List.of(
+	private Author[] authors;
+	private String[] categories;
+	private String[] names;
+	
+	private String[] templates = new String[] {
 		"The %s of %s",
 		"A %s of %s",
 		"%s %s"
-	);
+	};
 	
 	public BookGenerator(
 		Random random,
-		List<Author> authors,
-		List<String> categories) throws Exception
+		Author[] authors,
+		String[] categories) throws Exception
 	{	
 		super(random);
 		this.authors = authors;
@@ -30,15 +31,16 @@ public class BookGenerator extends GeneratorBase<Book> implements IGenerator<Boo
 	}
 	
 	@Override
-	public Book GetNext() {
-		var template = GetRandom(this.templates);
-		var names = GetRandom(this.names, 2);
+	public Book getNext() {
+		var template = getRandom(this.templates);
+		var components = new String[ComposeSize];
+		fillWithRandom(components, this.names);
 		
 		return new Book(
 			UUID.randomUUID().toString(),
-			String.format(template, names.get(0), names.get(1)),
-			GetRandom(this.authors),
-			GetRandom(this.categories));
+			String.format(template, names[0], names[1]),
+			getRandom(this.authors),
+			getRandom(this.categories));
 	}
 
 }

@@ -1,20 +1,14 @@
 package librarysort.models;
 
 public class ShelfBuilder {
-
-	private int shelfLimit;
-	
-	public ShelfBuilder(int shelfLimit) {
-		this.shelfLimit = shelfLimit;
-	}
 	
 	/*
 	 * The books need to be sorted at this step,
 	 * because of the way that the shelf distribution work.
 	 */
-	public Shelf[] buildShelfs(Book[] books) {
+	public static Shelf[] buildShelfs(Book[] books, int shelfLimit) {
 		// Create the shelfs
-		var shelfAmount = books.length / this.shelfLimit; 
+		var shelfAmount = books.length / shelfLimit; 
 		var shelfs = new Shelf[shelfAmount];
 		
 		// Set initial book index

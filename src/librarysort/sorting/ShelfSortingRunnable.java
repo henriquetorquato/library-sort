@@ -1,24 +1,28 @@
 package librarysort.sorting;
-import librarysort.models.Book;
+
 import librarysort.models.Shelf;
 
-public class ShelfSortingRunnable implements Runnable {
+public class ShelfSortingRunnable extends BookMergeSort implements Runnable {
 	
+	private int index;
 	private Shelf result;
 	private Boolean completed;
-	private final ISort<Book> sorting;
 	
-	public ShelfSortingRunnable(Shelf shelf, ISort<Book> sorting) {
-		this.sorting = sorting;
+	public ShelfSortingRunnable(int index, Shelf shelf) {
+		this.index = index;
 		this.result = shelf;
 		this.completed = false;
 	}
 	
 	@Override
-	public void run() {			
-		var books = this.sorting.sort(this.result.getBooks());
-		this.result.setBooks(books);
-		this.completed = true;
+	public void run() {
+		var books = sort(result.getBooks());
+		result.setBooks(books);
+		completed = true;
+	}
+	
+	public int getIndex() {
+		return this.index;
 	}
 	
 	public Shelf getResult() {

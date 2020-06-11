@@ -1,7 +1,5 @@
 package librarysort.generators;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public abstract class GeneratorBase<T> implements IGenerator<T> {
@@ -12,30 +10,24 @@ public abstract class GeneratorBase<T> implements IGenerator<T> {
 		this.random = random;
 	}
 	
-	public abstract T GetNext();
-
+	public abstract T getNext();
+	
 	@Override
-	public List<T> GetNext(int size) {
-		ArrayList<T> items = new ArrayList<T>();
-		for(int i = 0; i < size; i++) {
-			items.add(GetNext());
+	public void fill(T[] array) {
+		for (int i = 0; i < array.length; i++) {
+			array[i] = getNext();
 		}
-		
-		return items;
 	}
 	
-	public <TList> TList GetRandom(List<TList> list) {
-		var arr = list.toArray();
-		return list.get(this.random.nextInt(arr.length));
+	public <TList> void fillWithRandom(TList[] array, TList[] source) {
+		for (int i = 0; i < array.length; i++) {
+			array[i] = getRandom(source);
+		}
 	}
 	
-	public <TList> List<TList> GetRandom(List<TList> list, int count) {
-		var components = new Object[count];
-		for(int i = 0; i < count; i++) {
-			components[i] = GetRandom(list);
-		}
-		
-		return (List<TList>) List.of(components);
+	public <TList> TList getRandom(TList[] list) {
+		var index = this.random.nextInt(list.length);
+		return list[index];
 	}
 	
 }

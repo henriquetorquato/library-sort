@@ -1,12 +1,13 @@
 package librarysort.generators;
 
-import java.util.List;
 import java.util.Random;
 import librarysort.models.Author;
 
 public class AuthorGenerator extends GeneratorBase<Author> implements IGenerator<Author> {
 
-	private List<String> names;
+	private final int ComposeSize = 2;
+	
+	private String[] names;
 	
 	public AuthorGenerator(Random random) throws Exception {
 		super(random);
@@ -14,9 +15,11 @@ public class AuthorGenerator extends GeneratorBase<Author> implements IGenerator
 	}
 
 	@Override
-	public Author GetNext() {
-		var names = GetRandom(this.names, 2);
-		return new Author(names.get(0), names.get(1));
+	public Author getNext() {
+		var names = new String[ComposeSize];
+		fillWithRandom(names, this.names);
+		
+		return new Author(names[0], names[1]);
 	}
 
 }

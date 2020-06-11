@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import librarysort.models.Book;
 
-public class BookMultithreadedQuickSort extends BookQuickSort implements ISort<Book> {
+public class BookMultithreadedQuickSort implements ISort<Book> {
 
 	private final List<BookSortingRunnable> runnables;
 	

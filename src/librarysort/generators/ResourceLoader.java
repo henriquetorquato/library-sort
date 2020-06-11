@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class ResourceLoader {
 
-	private static Map<String, List<String>> resources = new HashMap<String, List<String>>();
+	private static Map<String, String[]> resources = new HashMap<String, String[]>();
 	
-	public static List<String> Get(String name) throws Exception {
+	public static String[] Get(String name) throws Exception {
 		try
 		{
 			var resource = resources.get(name);
@@ -29,14 +28,14 @@ public final class ResourceLoader {
 		}
 	}
 	
-	public static List<String> Load(String name) throws Exception {
+	public static String[] Load(String name) throws Exception {
 		try
 		{		
 			var path = getPath(name);
 			var file = new File(path);
 			var stream = new FileInputStream(file);
 			
-			ArrayList<String> resource = new ArrayList<String>();
+			var resource = new ArrayList<String>();
 			var line = new StringBuilder();
 			
 			int c;
@@ -56,7 +55,7 @@ public final class ResourceLoader {
 				throw new Exception(String.format("The resource '%s' is empty", name));
 			}
 			
-			return resource;
+			return resource.toArray(new String[resource.size()]);
 		}
 		catch (Exception ex)
 		{

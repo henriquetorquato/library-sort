@@ -1,14 +1,12 @@
 package librarysort.generators;
 
-import java.util.List;
-
 // Defines the methods of a object generator
 public interface IGenerator<T> {
 	
 	// Creates a new instance
-	public T GetNext();
+	public T getNext();
 	
-	// Creates n new instances
-	public List<T> GetNext(int size);
+	// Creates n new instances calling the abstract `GetNext`
+	public void fill(T[] array);
 	
 }
