@@ -35,5 +35,6 @@ Every created shelf gives origin to a diferent thread, each thread will apply a 
 - [X] Implement `QuickSort` for the books
 - [x] Implement `MergeSort` for the books inside the shelf's
 - [x] Implement multithreading for the multiple shelf sorting
-- [ ] Implement multithreading inside the `QuickSort` partitions
+- [x] Implement multithreading inside the `QuickSort` partitions
     - When sorting a large amount of books, it is taking a while.
+- [ ] Create serializer for the shelfs
