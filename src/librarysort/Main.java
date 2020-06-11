@@ -17,26 +17,33 @@ import librarysort.sorting.ShelfMultithreadedMergeSort;
 
 public class Main {
 	
+	// Program configurations
+	private static final int Seed = 0;
+	private static final int CategoryAmount = 1000;
+	private static final int AuthorAmount = 1000;
+	private static final int BookAmount = 10;
+	private static final int ShelfLimit = 5;
+	
 	public static void main(String[] args) throws Exception {
 		try 
 		{		
 			// Create the random object for the generators
-			var random = new Random();
+			var random = new Random(Seed);
 			
 			// Generate the used categories
-			var categories = GenerateResources("Categories", new CategoryGenerator(random), 1000, String.class);
+			var categories = GenerateResources("Categories", new CategoryGenerator(random), CategoryAmount, String.class);
 			
 			// Generate the used authors
-			var authors = GenerateResources("Authors", new AuthorGenerator(random), 1000, Author.class);
+			var authors = GenerateResources("Authors", new AuthorGenerator(random), AuthorAmount, Author.class);
 			
 			// Generate the books using the defined categories and authors
-			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), 10, Book.class);
+			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), BookAmount, Book.class);
 			
 			// Sort the books by category
 			var sortedBooks = RunSortingThreads("Books", books, new BookMultithreadedQuickSort());
 			
 			// Distributes the sorted books to the shelfs, using the book per shelf limit
-			var shelfs = ShelfBuilder.buildShelfs(sortedBooks, 5);
+			var shelfs = ShelfBuilder.buildShelfs(sortedBooks, ShelfLimit);
 			
 			var sortedShelfs = RunSortingThreads("Shelfs", shelfs, new ShelfMultithreadedMergeSort());
 		}
