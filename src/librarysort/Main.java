@@ -19,33 +19,36 @@ public class Main {
 	
 	// Program configurations
 	private static final int Seed = 0;
-	private static final int CategoryAmount = 1000;
-	private static final int AuthorAmount = 1000;
-	private static final int BookAmount = 10;
-	private static final int ShelfLimit = 5;
+	private static final int CategoryAmount = 10000;
+	private static final int AuthorAmount = 10000;
+	private static final int BookAmount = 100000;
+	private static final int ShelfLimit = 500;
 	
 	public static void main(String[] args) throws Exception {
 		try 
 		{		
 			// Create the random object for the generators
-			var random = new Random(Seed);
+			var random = new Random();
+			var data = new DataWriter.Data();
 			
 			// Generate the used categories
-			var categories = GenerateResources("Categories", new CategoryGenerator(random), CategoryAmount, String.class);
+			data.categories = GenerateResources("Categories", new CategoryGenerator(random), CategoryAmount, String.class); 
 			
 			// Generate the used authors
-			var authors = GenerateResources("Authors", new AuthorGenerator(random), AuthorAmount, Author.class);
+			data.authors = GenerateResources("Authors", new AuthorGenerator(random), AuthorAmount, Author.class);
 			
 			// Generate the books using the defined categories and authors
-			var books = GenerateResources("Books", new BookGenerator(random, authors, categories), BookAmount, Book.class);
+			var books = GenerateResources("Books", new BookGenerator(random, data.authors, data.categories), BookAmount, Book.class);
 			
 			// Sort the books by category
-			var sortedBooks = RunSortingThreads("Books", books, new BookMultithreadedQuickSort());
+			data.books = RunSortingThreads("Books", books, new BookMultithreadedQuickSort());
 			
 			// Distributes the sorted books to the shelfs, using the book per shelf limit
-			var shelfs = ShelfBuilder.buildShelfs(sortedBooks, ShelfLimit);
+			var shelfs = ShelfBuilder.buildShelfs(data.books, ShelfLimit);
 			
-			var sortedShelfs = RunSortingThreads("Shelfs", shelfs, new ShelfMultithreadedMergeSort());
+			data.shelfs = RunSortingThreads("Shelfs", shelfs, new ShelfMultithreadedMergeSort());
+			
+			DataWriter.write(data);
 		}
 		catch (Exception ex) 
 		{

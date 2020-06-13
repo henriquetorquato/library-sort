@@ -37,4 +37,5 @@ Every created shelf gives origin to a diferent thread, each thread will apply a 
 - [x] Implement multithreading for the multiple shelf sorting
 - [x] Implement multithreading inside the `QuickSort` partitions
     - When sorting a large amount of books, it is taking a while.
-- [ ] Create serializer for the shelfs
+- [x] Create serializer for the shelfs
+- [ ] Add more word's for book name variation

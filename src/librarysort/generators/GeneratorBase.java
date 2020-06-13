@@ -26,7 +26,7 @@ public abstract class GeneratorBase<T> implements IGenerator<T> {
 	}
 	
 	public <TList> TList getRandom(TList[] list) {
-		var index = this.random.nextInt(list.length);
+		var index = random.nextInt(list.length);
 		return list[index];
 	}
 	

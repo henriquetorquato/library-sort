@@ -14,8 +14,8 @@ public class BookGenerator extends GeneratorBase<Book> implements IGenerator<Boo
 	private String[] names;
 	
 	private String[] templates = new String[] {
-		"The %s of %s",
-		"A %s of %s",
+		"%s and the %s",
+		"%s of %s",
 		"%s %s"
 	};
 	
@@ -38,7 +38,7 @@ public class BookGenerator extends GeneratorBase<Book> implements IGenerator<Boo
 		
 		return new Book(
 			UUID.randomUUID().toString(),
-			String.format(template, names[0], names[1]),
+			String.format(template, components[0], components[1]),
 			getRandom(this.authors),
 			getRandom(this.categories));
 	}
