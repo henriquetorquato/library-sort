@@ -7,17 +7,13 @@ import librarysort.models.Book;
 
 public class BookGenerator extends GeneratorBase<Book> implements IGenerator<Book> {
 	
-	private final int ComposeSize = 2;
+	private final int ComposeSizeMin = 3;
+	private final int ComposeSizeMax = 10;
 	
 	private Author[] authors;
 	private String[] categories;
-	private String[] names;
-	
-	private String[] templates = new String[] {
-		"%s and the %s",
-		"%s of %s",
-		"%s %s"
-	};
+	private String[] words;
+	private final Random random;
 	
 	public BookGenerator(
 		Random random,
@@ -25,22 +21,29 @@ public class BookGenerator extends GeneratorBase<Book> implements IGenerator<Boo
 		String[] categories) throws Exception
 	{	
 		super(random);
+		this.random = random;
 		this.authors = authors;
 		this.categories = categories;
-		this.names = ResourceLoader.Get("names.txt");
+		this.words = ResourceLoader.Get("words.txt");
 	}
 	
 	@Override
-	public Book getNext() {
-		var template = getRandom(this.templates);
-		var components = new String[ComposeSize];
-		fillWithRandom(components, this.names);
-		
+	public Book getNext() {	
 		return new Book(
 			UUID.randomUUID().toString(),
-			String.format(template, components[0], components[1]),
+			getName(),
 			getRandom(this.authors),
 			getRandom(this.categories));
+	}
+	
+	public String getName() {
+		var size = random.nextInt((ComposeSizeMax - ComposeSizeMin) + 1) + ComposeSizeMin;
+		var components = new String[size];
+		fillWithRandom(components, words);
+		
+		var name = String.join(" ", components);
+		name = String.format("%s%s", name.substring(0, 1).toUpperCase(), name.substring(1)); 
+		return name;
 	}
 
 }

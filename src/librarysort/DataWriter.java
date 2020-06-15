@@ -48,7 +48,7 @@ public class DataWriter {
 	private static String getHeader(Data data) {
 		return new StringBuilder()
 			.append(String.format("Sorted %d book's on %d shelfs\n", data.books.length, data.shelfs.length))
-			.append(String.format("Used %d generated Authors for %d generated gategories\n", data.authors.length, data.categories.length))
+			.append(String.format("Used %d generated Authors for %d generated categories\n", data.authors.length, data.categories.length))
 			.append("\n-")
 			.toString();
 	}

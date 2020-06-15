@@ -22,6 +22,19 @@ This will place the book's in order to be added to a selected shelf.
 
 Every created shelf gives origin to a diferent thread, each thread will apply a `MergeSort` implementation, witch performs better over random places objects. The book's will be ordered by name in alphabetical order.
 
+## Inner workings
+
+- At first, the algorithm generates random authors and categories;
+- Then these values are used to generate random book;
+    - Authors can write more than just one book;
+    - Different books fit in the same category.
+- The newly generated books are sorted based on category;
+    - `QuickSort` is used here.
+- The books are split into fixed sized shelfs;
+- Each shelf originates a thread;
+- Every book in each self is ordered by name;
+    - `MergeSort` is used here.
+
 ## References
 
 - Visual reference for the sorting algorithm's can be found [here](https://www.youtube.com/watch?v=ZZuD6iUe3Pc).
@@ -32,10 +45,10 @@ Every created shelf gives origin to a diferent thread, each thread will apply a 
 
 - [x] Implement Author and Category generator
 - [x] Implement book generator
-- [X] Implement `QuickSort` for the books
+- [x] Implement `QuickSort` for the books
 - [x] Implement `MergeSort` for the books inside the shelf's
 - [x] Implement multithreading for the multiple shelf sorting
 - [x] Implement multithreading inside the `QuickSort` partitions
     - When sorting a large amount of books, it is taking a while.
 - [x] Create serializer for the shelfs
-- [ ] Add more word's for book name variation
+- [x] Add more word's for book name variation
